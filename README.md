@@ -1,6 +1,6 @@
 # Midterm-Data-Project (Wine Store Website)
 
-A WINEDEE-inspired wine e-commerce web application developed as a midterm project, featuring user authentication, an interactive wine catalog with multi-criteria filtering, inventory management, a session-based shopping cart, and simulated payment processing.
+A Vivino-inspired wine e-commerce web application developed as a midterm project, featuring user authentication, an interactive wine catalog with multi-criteria filtering, inventory management, a session-based shopping cart, and simulated payment processing.
 
 ---
 
@@ -31,17 +31,8 @@ A WINEDEE-inspired wine e-commerce web application developed as a midterm projec
 Follow these steps to run the application locally:
 
 1. Open a terminal or command prompt inside the project root directory.
-2. Install the required dependencies by running:
+2. Install dependencies and start the server by running:
    ```bash
    npm install
-
-Start the backend server:
-
-use
-
-node server.js
-
-Open your web browser and navigate to:
-
-http://localhost:3000
+   node server.js
 
