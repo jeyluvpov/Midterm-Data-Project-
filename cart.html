@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart & Checkout - WINEDEE Style</title>
+  <style>
+    :root {
+        --brand-red: #aa152c;
+        --bg-gray: #faf8f5;
+        --text-dark: #1e1e1e;
+        --border-color: #e2e2e2;
+    }
+
+    body { 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        background: var(--bg-gray); 
+        margin: 0; 
+        padding: 40px 20px; 
+        color: var(--text-dark); 
+    }
+
+    .container { 
+        max-width: 900px; 
+        margin: 0 auto; 
+        background: white; 
+        padding: 35px; 
+        border-radius: 16px; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06); 
+        border: 1px solid #eae5de; 
+    }
+
+    h1 { 
+        color: var(--brand-red); 
+        text-align: center; 
+        margin-bottom: 25px; 
+        font-size: 2rem;
+    }
+
+    .cart-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .cart-item { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding: 18px 0; 
+        border-bottom: 1px solid #eee; 
+    }
+
+    .cart-info h4 { 
+        margin: 0 0 5px 0; 
+        font-size: 1.1rem; 
+        font-weight: 700;
+    }
+
+    .cart-info p { 
+        margin: 0; 
+        color: #666; 
+        font-size: 0.9rem; 
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
+    }
+
+    .qty-btn {
+        background: #eee;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .qty-btn:hover {
+        background: #ccc;
+    }
+
+    .cart-actions { 
+        display: flex; 
+        align-items: center; 
+        gap: 20px; 
+    }
+
+    .summary-box {
+        background: #fdfbf7;
+        border: 1px solid #eee;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 25px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .total-section { 
+        display: flex; 
+        justify-content: space-between; 
+        font-size: 1.3rem; 
+        font-weight: 800; 
+        margin-top: 15px; 
+        padding-top: 15px; 
+        border-top: 2px solid #ddd; 
+        color: #111;
+    }
+
+    .checkout-form {
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 25px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .form-group.full {
+        grid-column: span 2;
+    }
+
+    .form-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .form-group input, .form-group select {
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+
+    .btn-checkout { 
+        display: block; 
+        width: 100%; 
+        background: var(--brand-red); 
+        color: white; 
+        border: none; 
+        padding: 14px; 
+        border-radius: 10px; 
+        font-size: 1.05rem; 
+        font-weight: bold; 
+        cursor: pointer; 
+        margin-top: 15px; 
+        text-align: center; 
+        transition: background 0.2s;
+    }
+
+    .btn-checkout:hover { 
+        background: #8b1022; 
+    }
+
+    .back-link { 
+        display: block; 
+        text-align: center; 
+        margin-top: 20px; 
+        color: #666; 
+        text-decoration: none; 
+        font-weight: 600;
+    }
+
+    .back-link:hover {
+        color: var(--brand-red);
+    }
+
+    .empty-cart { 
+        text-align: center; 
+        color: #888; 
+        padding: 50px 0; 
+        font-size: 1.1rem; 
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>🛒 Your Wine Cart & Checkout</h1>
+    
+    <div id="cart-items-container">
+      </div>
+
+    <div class="summary-box" id="summaryBox" style="display:none;">
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span id="sub-total">THB 0</span>
+      </div>
+      <div class="summary-row">
+        <span>Estimated Shipping</span>
+        <span>THB 150</span>
+      </div>
+      <div class="total-section">
+        <span>Grand Total</span>
+        <span id="grand-total">THB 0</span>
+      </div>
+    </div>
+
+    <div class="checkout-form" id="checkoutFormSection" style="display:none;">
+      <h3 style="margin-bottom: 15px; font-size: 1.2rem;">📍 Shipping & Payment Details</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="shipName" placeholder="John Doe" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="shipPhone" placeholder="0891234567" required>
+        </div>
+        <div class="form-group full">
+          <label>Delivery Address</label>
+          <input type="text" id="shipAddress" placeholder="123 Sukhumvit Road, Bangkok" required>
+        </div>
+        <div class="form-group full">
+          <label>Payment Method</label>
+          <select id="paymentMethod">
+            <option value="Credit Card">Credit / Debit Card</option>
+            <option value="PromptPay QR">PromptPay QR Code</option>
+            <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-checkout" onclick="processCheckout()">Complete Order Securely</button>
+    </div>
+  </div>
+
+  <a href="wines.html" class="back-link">← Back to Wines Catalog</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', loadCart);
+
+    function loadCart() {
+      let cart = JSON.parse(localStorage.getItem('wine_cart')) || [];
+      const container = document.getElementById('cart-items-container');
+      const summaryBox = document.getElementById('summaryBox');
+      const checkoutFormSection = document.getElementById('checkoutFormSection');
+
+      if (cart.length === 0) {
+        container.innerHTML = '<div class="empty-cart">Your cart is currently empty.</div>';
+        summaryBox.style.display = 'none';
+        checkoutFormSection.style.display = 'none';
+        return;
+      }
+
+      summaryBox.style.display = 'block';
+      checkoutFormSection.style.display = 'block';
+
+      let html = '';
+      let subTotal = 0;
+      const shippingFee = 150;
+
+      cart.forEach((item, index) => {
+        let itemTotal = item.price * item.quantity;
+        subTotal += itemTotal;
+        html += `
+          <div class="cart-item">
+            <div class="cart-info">
+              <h4>${item.name}</h4>
+              <p>${item.winery || 'Winery'} | <strong>THB ${item.price.toLocaleString()}</strong></p>
+              <div class="quantity-controls">
+                <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                <span>${item.quantity}</span>
+                <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+              </div>
+            </div>
+            <div class="cart-actions">
+              <strong style="font-size: 1.1rem;">THB ${itemTotal.toLocaleString()}</strong>
+              <button onclick="removeItem(${index})" style="background:none; border:none; color:#aa152c; cursor:pointer; font-size:1.2rem;" title="Remove Item">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      document.getElementById('sub-total').innerText = `THB ${subTotal.toLocaleString()}`;
+      document.getElementById('grand-total').innerText = `THB ${(subTotal + shippingFee).toLocaleString()}`;
+    }
+
+    function updateQuantity(index, change) {
+      let cart = JSON.parse(localStorage.getItem('wine_cart')) || [];
+      cart[index].quantity += change;
+      
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+
+      localStorage.setItem('wine_cart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem('wine_cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('wine_cart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    async function processCheckout() {
+      let cart = JSON.parse(localStorage.getItem('wine_cart')) || [];
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+
+      const name = document.getElementById('shipName').value.trim();
+      const phone = document.getElementById('shipPhone').value.trim();
+      const address = document.getElementById('shipAddress').value.trim();
+      const paymentMethod = document.getElementById('paymentMethod').value;
+
+      if (!name || !phone || !address) {
+        alert('Please fill in all shipping details.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            items: cart,
+            shippingInfo: { name, phone, address, paymentMethod }
+          })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          alert(`🎉 Payment Successful!\nOrder ID: ${data.orderId || 'WINE-' + Math.floor(100000 + Math.random() * 900000)}\nThank you for shopping with WINEDEE.`);
+          localStorage.removeItem('wine_cart');
+          window.location.href = 'wines.html';
+        } else {
+          alert('Checkout failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error(err);
+        // Fallback simulation ถ้าฝั่ง Server ยังไม่ได้รัน API /api/checkout
+        const fakeOrderId = 'VIV-' + Math.floor(100000 + Math.random() * 900000);
+        alert(`🎉 Order Placed Successfully (Simulation Mode)!\nOrder ID: ${fakeOrderId}\nThank you, ${name}!`);
+        localStorage.removeItem('wine_cart');
+        window.location.href = 'wines.html';
+      }
+    }
+  </script>
+
+</body>
+</html>
