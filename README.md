@@ -1,6 +1,6 @@
 # Midterm-Data-Project (Wine Store Website)
 
-A Vivino-inspired wine e-commerce web application developed as a midterm project, featuring user authentication, an interactive wine catalog with multi-criteria filtering, inventory management, a session-based shopping cart, and simulated payment processing.
+A WINEDEE-inspired wine e-commerce web application developed as a midterm project, featuring user authentication, an interactive wine catalog with multi-criteria filtering, inventory management, a session-based shopping cart, and simulated payment processing.
 
 ---
 
