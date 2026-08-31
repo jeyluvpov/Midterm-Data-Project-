@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Wines - WINEDEE Style</title>
+    <style>
+        :root {
+            --brand-red: #aa152c;
+            --bg-gray: #faf8f5;
+            --text-dark: #1e1e1e;
+            --border-color: #e2e2e2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex: 1;
+        }
+
+        .brand {
+            color: var(--brand-red);
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a.active {
+            color: var(--brand-red);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 9px 16px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            background: #f4f4f4;
+            font-size: 0.9rem;
+        }
+
+        .user-nav-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 15px;
+        }
+
+        .user-name-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .catalog-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 30px;
+        }
+
+        .filter-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .filter-group {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .filter-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #444;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            accent-color: var(--brand-red);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .price-slider-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .price-val {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .range-input {
+            width: 100%;
+            accent-color: var(--brand-red);
+        }
+
+        .catalog-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .catalog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .catalog-title h1 {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .catalog-title p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .sort-box select {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-weight: 600;
+            background: white;
+            cursor: pointer;
+        }
+
+        .wine-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .wine-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 140px 1fr 180px;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .wine-image-box {
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wine-image-box img {
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .wine-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .winery-brand-name {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .wine-full-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111;
+            line-height: 1.3;
+        }
+
+        .wine-origin {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        .wine-food-pairing {
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 6px;
+        }
+
+        .wine-price-rating {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            border-left: 1px solid #f0f0f0;
+            padding-left: 20px;
+            gap: 12px;
+        }
+
+        .rating-score {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .rating-stars {
+            color: var(--brand-red);
+            font-size: 0.85rem;
+        }
+
+        .rating-count {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .price-amount {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .btn-add-cart {
+            background: #111;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-add-cart:hover {
+            background: var(--brand-red);
+        }
+
+        #floating-cart {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #aa152c;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+        #floating-cart:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="store.html" class="brand">WINEDEE</a>
+                <ul class="nav-links">
+                    <li><a href="store.html">Explore</a></li>
+                    <li><a href="wines.html" class="active">Wines</a></li>
+                </ul>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search any wine, winery, or region...">
+            </div>
+            <div class="user-nav-info">
+                <span id="navUserName" class="user-name-text" style="display:none;"></span>
+                <button id="btnLogout" onclick="handleLogout()"
+                    style="display:none; background:none; border:1px solid #aa152c; color:#aa152c; padding:6px 14px; border-radius:20px; font-weight:600; cursor:pointer;">
+                    Log Out
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="catalog-container">
+        <aside class="filter-sidebar">
+            <div class="filter-group">
+                <div class="filter-title">Wine types</div>
+                <ul class="checkbox-list">
+                    <label class="checkbox-item"><input type="checkbox" class="filter-type" value="Red"> Red</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-type" value="White"> White</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-type" value="Sparkling"> Sparkling</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-type" value="Rosé"> Rosé</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-type" value="Dessert"> Dessert</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-type" value="Fortified"> Fortified</label>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-title">Price range (THB)</div>
+                <div class="price-slider-box">
+                    <div class="price-val">Up to ฿<span id="priceDisplay">10000</span></div>
+                    <input type="range" id="priceRange" class="range-input" min="500" max="10000" step="100" value="10000">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-title">WINEDEE average rating</div>
+                <ul class="checkbox-list">
+                    <label class="checkbox-item"><input type="radio" name="rating" class="filter-rating" value="4.5"> ★ 4.5+ (Rare)</label>
+                    <label class="checkbox-item"><input type="radio" name="rating" class="filter-rating" value="4.0"> ★ 4.0+ (Very good)</label>
+                    <label class="checkbox-item"><input type="radio" name="rating" class="filter-rating" value="3.5"> ★ 3.5+ (Good)</label>
+                    <label class="checkbox-item"><input type="radio" name="rating" class="filter-rating" value="0" checked> Any rating</label>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-title">Country</div>
+                <ul class="checkbox-list">
+                    <label class="checkbox-item"><input type="checkbox" class="filter-country" value="France"> 🇫🇷 France</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-country" value="Italy"> 🇮🇹 Italy</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-country" value="Spain"> 🇪🇸 Spain</label>
+                    <label class="checkbox-item"><input type="checkbox" class="filter-country" value="USA"> 🇺🇸 USA</label>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="catalog-content">
+            <div class="catalog-header">
+                <div class="catalog-title">
+                    <h1>Wines Catalog</h1>
+                    <p id="wineCountText">Showing wines from database</p>
+                </div>
+                <div class="sort-box">
+                    <label for="sortSelect">Sort: </label>
+                    <select id="sortSelect">
+                        <option value="rating_desc">Highest rated</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="wine-list" id="wineListContainer"></div>
+        </main>
+    </div>
+
+    <div id="floating-cart" onclick="window.location.href='cart.html'" title="View Cart">
+        🛒
+        <span id="cart-count" style="position: absolute; top: -5px; right: -5px; background: #ffcc00; color: #333; font-size: 0.8rem; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white;">0</span>
+    </div>
+
+    <script>
+        async function fetchWines() {
+            const search = document.getElementById('searchInput').value;
+            const sort = document.getElementById('sortSelect').value;
+            const maxPrice = document.getElementById('priceRange').value;
+
+            const selectedTypes = Array.from(document.querySelectorAll('.filter-type:checked')).map(el => el.value);
+            const selectedRating = document.querySelector('.filter-rating:checked')?.value || '0';
+            const selectedCountries = Array.from(document.querySelectorAll('.filter-country:checked')).map(el => el.value);
+
+            const params = new URLSearchParams();
+            if (search && search.trim() !== '') params.append('search', search);
+            if (sort) params.append('sort', sort);
+            if (maxPrice && parseFloat(maxPrice) < 10000) params.append('maxPrice', maxPrice);
+            if (selectedTypes.length > 0) params.append('types', selectedTypes.join(','));
+            if (parseFloat(selectedRating) > 0) params.append('minRating', selectedRating);
+            if (selectedCountries.length > 0) params.append('countries', selectedCountries.join(','));
+
+            try {
+                const res = await fetch(`/api/wines?${params.toString()}`);
+                const wines = await res.json();
+                renderWines(wines);
+            } catch (err) {
+                console.error('Failed to fetch wines:', err);
+            }
+        }
+
+        function renderWines(wines) {
+            const container = document.getElementById('wineListContainer');
+            document.getElementById('wineCountText').innerText = `Showing ${wines.length} wines`;
+
+            if (!wines || wines.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:50px; color:#888;">No wines found matching your criteria.</div>`;
+                return;
+            }
+
+            container.innerHTML = wines.map(wine => `
+                <div class="wine-card">
+                    <div class="wine-image-box">
+                        <img src="${wine.image || 'https://images.vivino.com/thumbs/0068ba2p910000_300x600.png'}" alt="${wine.name}" onerror="this.src='https://via.placeholder.com/80x200?text=Wine'">
+                    </div>
+                    <div class="wine-details">
+                        <span class="winery-brand-name">${wine.winery || 'Winery'}</span>
+                        <h2 class="wine-full-name">${wine.name}</h2>
+                        <div class="wine-origin">📍 ${wine.region || ''}, ${wine.country || ''}</div>
+                        ${wine.food_pairing ? `<div class="wine-food-pairing">🍽️ Pairs well with ${wine.food_pairing}</div>` : ''}
+                    </div>
+                    <div class="wine-price-rating">
+                        <div class="rating-box">
+                            <div class="rating-score">${wine.rating ? wine.rating.toFixed(1) : 'N/A'}</div>
+                            <div class="rating-stars">★★★★★</div>
+                            <div class="rating-count">${wine.ratings_count || 0} ratings</div>
+                        </div>
+                        <div class="price-box">
+                            <div class="price-amount">THB ${wine.price ? wine.price.toLocaleString() : '0'}</div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart(${wine.id}, '${wine.name.replace(/'/g, "\\'")}', ${wine.price || 0}, '${(wine.winery || '').replace(/'/g, "\\'")}')">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('wine_cart')) || [];
+            let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const countEl = document.getElementById('cart-count');
+            if (countEl) countEl.innerText = totalItems;
+        }
+
+        function addToCart(id, name, price, winery) {
+            let cart = JSON.parse(localStorage.getItem('wine_cart')) || [];
+            let existingItem = cart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, winery, quantity: 1 });
+            }
+
+            localStorage.setItem('wine_cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Notification toast or styled feedback instead of simple alert
+            showToast(`Added "${name}" to your cart!`);
+        }
+
+        function showToast(message) {
+            let toast = document.getElementById('toast-notification');
+            if(!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast-notification';
+                toast.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#111; color:#fff; padding:12px 24px; border-radius:30px; font-weight:600; z-index:2000; box-shadow:0 4px 12px rgba(0,0,0,0.2); transition:opacity 0.3s;';
+                document.body.appendChild(toast);
+            }
+            toast.innerText = message;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount();
+
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            const savedUser = localStorage.getItem("user");
+            const btnLogout = document.getElementById("btnLogout");
+            const navUserName = document.getElementById("navUserName");
+
+            if (isLoggedIn === "true" || savedUser) {
+                let displayName = "User";
+                if (savedUser) {
+                    const userObj = JSON.parse(savedUser);
+                    displayName = userObj.fullName || userObj.email || "User";
+                }
+                if (navUserName) {
+                    navUserName.innerText = `👤 ${displayName}`;
+                    navUserName.style.display = "inline";
+                }
+                if (btnLogout) btnLogout.style.display = "block";
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('search')) document.getElementById('searchInput').value = urlParams.get('search');
+            
+            const typesParam = urlParams.get('types') || urlParams.get('type');
+            if (typesParam) {
+                typesParam.split(',').forEach(t => {
+                    const cb = document.querySelector(`.filter-type[value="${t.trim()}"]`);
+                    if (cb) cb.checked = true;
+                });
+            }
+
+            if (urlParams.get('maxPrice')) {
+                document.getElementById('priceRange').value = urlParams.get('maxPrice');
+                document.getElementById('priceDisplay').innerText = urlParams.get('maxPrice');
+            }
+
+            if (urlParams.get('minRating')) {
+                const ratingRadio = document.querySelector(`.filter-rating[value="${urlParams.get('minRating')}"]`);
+                if (ratingRadio) ratingRadio.checked = true;
+            }
+
+            if (urlParams.get('countries')) {
+                urlParams.get('countries').split(',').forEach(c => {
+                    const cb = document.querySelector(`.filter-country[value="${c.trim()}"]`);
+                    if (cb) cb.checked = true;
+                });
+            }
+
+            if (urlParams.get('sort')) document.getElementById('sortSelect').value = urlParams.get('sort');
+
+            fetchWines();
+
+            document.getElementById('searchInput').addEventListener('input', fetchWines);
+            document.getElementById('sortSelect').addEventListener('change', fetchWines);
+
+            document.getElementById('priceRange').addEventListener('input', (e) => {
+                document.getElementById('priceDisplay').innerText = e.target.value;
+                fetchWines();
+            });
+
+            document.querySelectorAll('.filter-type, .filter-rating, .filter-country').forEach(element => {
+                element.addEventListener('change', fetchWines);
+            });
+        });
+
+        function handleLogout() {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("user");
+            window.location.href = "store.html";
+        }
+    </script>
+</body>
+
+</html>
